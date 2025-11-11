@@ -11,8 +11,12 @@ using MediatR;
 using MyService.Business.Interfaces;
 using MyService.Business.Services;
 using MyService.Data.Interfaces;
+/*#if (UseEFCore) */
 using MyService.Data.Context;
+/*#endif */
+/*#if (UseEFCore || UseDapper) */
 using MyService.Data.Repositories;
+/*#endif */
 /*#endif */
 /*#if (IsVerticalSlice) */
 using MyService.Shared.Behaviors;
@@ -151,6 +155,7 @@ try
     builder.Services.AddScoped<IWeatherRepository, WeatherRepository>();
 /*#endif */
 /*#if (UseDapper) */
+    // Dapper repository (no DbContext needed)
     builder.Services.AddScoped<IWeatherRepository, WeatherRepositoryDapper>();
 /*#endif */
 /*#endif */

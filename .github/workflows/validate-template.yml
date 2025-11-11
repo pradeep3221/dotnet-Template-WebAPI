@@ -1,0 +1,60 @@
+name: Template Validation
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build-matrix:
+    name: Build ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Clean + EFCore
+            arch: Clean
+            archPath: Clean
+            data: EFCore
+          - name: Layered + EFCore
+            arch: Layered
+            archPath: Layered
+            data: EFCore
+          - name: Layered + Dapper
+            arch: Layered
+            archPath: Layered
+            data: Dapper
+          - name: VerticalSlice + EFCore
+            arch: VerticalSlice
+            archPath: VerticalSlice
+            data: EFCore
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+          cache: true
+
+      - name: Install template package
+        run: dotnet new install .
+
+      - name: Generate sample from template
+        run: |
+          dotnet new webapi-advanced \
+            -n Sample-${{ matrix.arch }}-${{ matrix.data }} \
+            -o Sample-${{ matrix.arch }}-${{ matrix.data }} \
+            --Architecture ${{ matrix.arch }} \
+            --IncludeDocker false \
+            --IncludeGitHubActions false \
+            --DataAccess ${{ matrix.data }}
+
+      - name: Build generated API
+        run: |
+          dotnet build Sample-${{ matrix.arch }}-${{ matrix.data }}/src/${{ matrix.archPath }}/Api/Sample-${{ matrix.arch }}-${{ matrix.data }}.Api.csproj -c Release
