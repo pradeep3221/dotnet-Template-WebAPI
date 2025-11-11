@@ -263,9 +263,7 @@
             "pack-template.ps1",
             "install-template.ps1",
             "test-template.ps1",
-            "MyCompany.CleanArchitecture.Template.nuspec",
-            "README.md",
-            "QUICKSTART.md"
+            "MyCompany.CleanArchitecture.Template.nuspec"
           ]
         },
         {
@@ -324,6 +322,19 @@
           "exclude": [
             "src/Layered/Data/Context/AppDbContext.cs",
             "src/Layered/Data/Repositories/WeatherRepository.cs"
+          ]
+        },
+        {
+          "condition": "(TestingFramework != 'xUnit')",
+          "exclude": [
+            "tests/UnitTests/MyService.UnitTests.csproj"
+          ]
+        },
+        {
+          "condition": "(TestingFramework != 'NUnit')",
+          "exclude": [
+            "tests/UnitTests/MyService.UnitTests.NUnit.csproj",
+            "tests/UnitTests/Application/GetWeatherQueryHandlerNUnitTests.cs"
           ]
         }
       ]

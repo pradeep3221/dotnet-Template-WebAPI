@@ -1,4 +1,3 @@
-#if (UseNUnit)
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
@@ -26,18 +25,19 @@
   </ItemGroup>
 
   <ItemGroup>
-#if (IsCleanArchitecture)
-    <ProjectReference Include="..\..\src\Application\MyService.Application.csproj" />
-#endif
-#if (IsLayeredArchitecture)
-    <ProjectReference Include="..\..\src\Business\MyService.Business.csproj" />
-#endif
-#if (IsVerticalSlice)
-    <ProjectReference Include="..\..\src\Features\MyService.Features.csproj" />
-#endif
-    <ProjectReference Include="..\..\src\Domain\MyService.Domain.csproj" />
+<!--#if (IsCleanArchitecture) -->
+    <ProjectReference Include="..\..\src\Clean\Application\MyService.Application.csproj" />
+    <ProjectReference Include="..\..\src\Clean\Domain\MyService.Domain.csproj" />
+<!--#endif -->
+<!--#if (IsLayeredArchitecture) -->
+    <ProjectReference Include="..\..\src\Layered\Business\MyService.Business.csproj" />
+    <ProjectReference Include="..\..\src\Layered\Domain\MyService.Domain.csproj" />
+<!--#endif -->
+<!--#if (IsVerticalSlice) -->
+    <ProjectReference Include="..\..\src\VerticalSlice\Features\MyService.Features.csproj" />
+    <ProjectReference Include="..\..\src\VerticalSlice\Domain\MyService.Domain.csproj" />
+<!--#endif -->
     <ProjectReference Include="..\Fixtures\MyService.Fixtures.csproj" />
   </ItemGroup>
 
 </Project>
-#endif

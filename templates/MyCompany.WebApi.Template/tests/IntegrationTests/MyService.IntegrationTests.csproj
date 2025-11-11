@@ -26,7 +26,6 @@
     </PackageReference>
   </ItemGroup>
   
-</Project>
   <ItemGroup>
     <!--#if (IsCleanArchitecture) -->
     <ProjectReference Include="..\..\src\Clean\Api\MyService.Api.csproj" />
@@ -42,3 +41,5 @@
     <!--#endif -->
     <ProjectReference Include="..\Fixtures\MyService.Fixtures.csproj" />
   </ItemGroup>
+
+</Project>

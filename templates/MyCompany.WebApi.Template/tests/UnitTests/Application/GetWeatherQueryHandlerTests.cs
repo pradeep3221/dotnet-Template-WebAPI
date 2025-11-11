@@ -1,3 +1,4 @@
+/*#if (UseXUnit && IsCleanArchitecture) */
 using FluentAssertions;
 using Moq;
 using MyService.Application.Features.Weather.Handlers;
@@ -63,3 +64,4 @@ public class GetWeatherQueryHandlerTests
         result.Should().BeNull();
     }
 }
+/*#endif */

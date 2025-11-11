@@ -1,0 +1,107 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A1A1A1A1-A1A1-A1A1-A1A1-A1A1A1A1A1A1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{B2B2B2B2-B2B2-B2B2-B2B2-B2B2B2B2B2B2}"
+EndProject
+<!--#if (IsCleanArchitecture) -->
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyService.Api", "src\Clean\Api\MyService.Api.csproj", "{11111111-1111-1111-1111-111111111111}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyService.Application", "src\Clean\Application\MyService.Application.csproj", "{22222222-2222-2222-2222-222222222222}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyService.Domain", "src\Clean\Domain\MyService.Domain.csproj", "{33333333-3333-3333-3333-333333333333}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyService.Infrastructure", "src\Clean\Infrastructure\MyService.Infrastructure.csproj", "{44444444-4444-4444-4444-444444444444}"
+EndProject
+<!--#endif -->
+<!--#if (IsLayeredArchitecture) -->
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyService.Api", "src\Layered\Api\MyService.Api.csproj", "{11111111-1111-1111-1111-111111111111}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyService.Business", "src\Layered\Business\MyService.Business.csproj", "{22222222-2222-2222-2222-222222222222}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyService.Data", "src\Layered\Data\MyService.Data.csproj", "{33333333-3333-3333-3333-333333333333}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyService.Domain", "src\Layered\Domain\MyService.Domain.csproj", "{44444444-4444-4444-4444-444444444444}"
+EndProject
+<!--#endif -->
+<!--#if (IsVerticalSlice) -->
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyService.Api", "src\VerticalSlice\Api\MyService.Api.csproj", "{11111111-1111-1111-1111-111111111111}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyService.Domain", "src\VerticalSlice\Domain\MyService.Domain.csproj", "{22222222-2222-2222-2222-222222222222}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyService.Features", "src\VerticalSlice\Features\MyService.Features.csproj", "{33333333-3333-3333-3333-333333333333}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyService.Infrastructure", "src\VerticalSlice\Infrastructure\MyService.Infrastructure.csproj", "{44444444-4444-4444-4444-444444444444}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyService.Shared", "src\VerticalSlice\Shared\MyService.Shared.csproj", "{55555555-5555-5555-5555-555555555555}"
+EndProject
+<!--#endif -->
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyService.Fixtures", "tests\Fixtures\MyService.Fixtures.csproj", "{BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyService.IntegrationTests", "tests\IntegrationTests\MyService.IntegrationTests.csproj", "{CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC}"
+EndProject
+<!--#if (UseXUnit) -->
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyService.UnitTests", "tests\UnitTests\MyService.UnitTests.csproj", "{DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD}"
+EndProject
+<!--#endif -->
+<!--#if (UseNUnit) -->
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyService.UnitTests", "tests\UnitTests\MyService.UnitTests.NUnit.csproj", "{DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD}"
+EndProject
+<!--#endif -->
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{11111111-1111-1111-1111-111111111111}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11111111-1111-1111-1111-111111111111}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11111111-1111-1111-1111-111111111111}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11111111-1111-1111-1111-111111111111}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22222222-2222-2222-2222-222222222222}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22222222-2222-2222-2222-222222222222}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22222222-2222-2222-2222-222222222222}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22222222-2222-2222-2222-222222222222}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33333333-3333-3333-3333-333333333333}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33333333-3333-3333-3333-333333333333}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33333333-3333-3333-3333-333333333333}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33333333-3333-3333-3333-333333333333}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44444444-4444-4444-4444-444444444444}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44444444-4444-4444-4444-444444444444}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44444444-4444-4444-4444-444444444444}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44444444-4444-4444-4444-444444444444}.Release|Any CPU.Build.0 = Release|Any CPU
+<!--#if (IsVerticalSlice) -->
+		{55555555-5555-5555-5555-555555555555}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55555555-5555-5555-5555-555555555555}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55555555-5555-5555-5555-555555555555}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55555555-5555-5555-5555-555555555555}.Release|Any CPU.Build.0 = Release|Any CPU
+<!--#endif -->
+		{BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{11111111-1111-1111-1111-111111111111} = {A1A1A1A1-A1A1-A1A1-A1A1-A1A1A1A1A1A1}
+		{22222222-2222-2222-2222-222222222222} = {A1A1A1A1-A1A1-A1A1-A1A1-A1A1A1A1A1A1}
+		{33333333-3333-3333-3333-333333333333} = {A1A1A1A1-A1A1-A1A1-A1A1-A1A1A1A1A1A1}
+		{44444444-4444-4444-4444-444444444444} = {A1A1A1A1-A1A1-A1A1-A1A1-A1A1A1A1A1A1}
+<!--#if (IsVerticalSlice) -->
+		{55555555-5555-5555-5555-555555555555} = {A1A1A1A1-A1A1-A1A1-A1A1-A1A1A1A1A1A1}
+<!--#endif -->
+		{BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB} = {B2B2B2B2-B2B2-B2B2-B2B2-B2B2B2B2B2B2}
+		{CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC} = {B2B2B2B2-B2B2-B2B2-B2B2-B2B2B2B2B2B2}
+		{DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD} = {B2B2B2B2-B2B2-B2B2-B2B2-B2B2B2B2B2B2}
+	EndGlobalSection
+EndGlobal

@@ -234,3 +234,4 @@ finally
     Log.CloseAndFlush();
 }
 /*#endif */
+    public partial class Program { }

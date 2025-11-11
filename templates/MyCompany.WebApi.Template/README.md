@@ -46,6 +46,12 @@ cd templates/MyCompany.WebApi.Template
 
 # Install template
 dotnet new install .
+
+# Uninstall template
+dotnet new uninstall MyCompany.CleanArchitecture.Template
+
+#To reinstall the same version of the template package, use '--force' option:
+dotnet new install E:\DotNetWorld\2025Projects\NET-Templates2025 --force
 ```
 
 ### Verify Installation
@@ -120,9 +126,17 @@ dotnet new clean-api --help
 
 **Note:** The template contains all three architectures. Based on your `--Architecture` choice, only the selected folder is included in your generated project.
 
+### Solution Organization
+
+The template automatically creates a Visual Studio solution file (`.sln`) with proper project organization:
+- **All test projects** are grouped in a **`tests` solution folder** for better organization
+- Source projects are placed at the solution root level
+- When opened in Visual Studio, you'll see a clean structure with tests grouped together
+
 ### Clean Architecture
 ```
 MyApi/
+├── MyApi.sln                       # Solution file with tests folder
 ├── src/Clean/
 │   ├── Api/                        # Web API layer
 │   ├── Application/                # Business logic (CQRS)
@@ -131,8 +145,10 @@ MyApi/
 │   │   └── Interfaces/             # Application interfaces
 │   ├── Domain/                     # Core domain entities
 │   └── Infrastructure/             # Data access, external services
-└── tests/
-    ├── UnitTests/, IntegrationTests/, Fixtures/
+└── tests/                          # Grouped in solution folder
+    ├── Fixtures/                   # Test data builders
+    ├── IntegrationTests/           # API integration tests
+    └── UnitTests/                  # Unit tests (xUnit or NUnit)
 ```
 
 ### Layered Architecture
@@ -607,5 +623,10 @@ For issues and questions:
 - Review example projects
 
 ---
+
+## Todo
+- New Virticle slice with CQRS with EF Core as write and Dapper as read and Event Sourcing with KurrentDB
+- Messaging with MassTransit 
+- Add simple 3 layer template - API, Business, Data
 
 **Made with ❤️ using .NET 9**
