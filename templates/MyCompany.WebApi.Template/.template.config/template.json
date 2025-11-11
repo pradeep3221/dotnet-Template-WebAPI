@@ -1,0 +1,345 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Katakam",
+  "classifications": ["Web", "API", "Clean Architecture", "Layered", "Vertical Slice"],
+  "identity": "MyCompany.WebApi.Template",
+  "name": ".NET 9 Web API Template - Configurable Architecture",
+  "shortName": "webapi-advanced",
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "sourceName": "MyService",
+  "preferNameDirectory": true,
+  "symbols": {
+    "Architecture": {
+      "type": "parameter",
+      "datatype": "choice",
+      "choices": [
+        {
+          "choice": "Clean",
+          "description": "Clean Architecture with Application, Domain, and Infrastructure layers"
+        },
+        {
+          "choice": "Layered",
+          "description": "Simple Layered Architecture with Api, Business, Data, and Domain layers"
+        },
+        {
+          "choice": "VerticalSlice",
+          "description": "Vertical Slice Architecture with feature-based organization"
+        }
+      ],
+      "defaultValue": "Clean Architecture",
+      "description": "The architecture style for the project"
+    },
+    "DataAccess": {
+      "type": "parameter",
+      "datatype": "choice",
+      "choices": [
+        {
+          "choice": "EFCore",
+          "description": "Entity Framework Core with migrations and repository pattern"
+        },
+        {
+          "choice": "Dapper",
+          "description": "Dapper lightweight micro-ORM with manual SQL"
+        }
+      ],
+      "defaultValue": "EFCore",
+      "description": "The data access technology to use"
+    },
+    "DatabaseProvider": {
+      "type": "parameter",
+      "datatype": "choice",
+      "choices": [
+        {
+          "choice": "SqlServer",
+          "description": "Microsoft SQL Server"
+        },
+        {
+          "choice": "PostgreSQL",
+          "description": "PostgreSQL database"
+        },
+        {
+          "choice": "MySQL",
+          "description": "MySQL database"
+        },
+        {
+          "choice": "SQLite",
+          "description": "SQLite database"
+        },
+        {
+          "choice": "InMemory",
+          "description": "In-memory database (for testing)"
+        }
+      ],
+      "defaultValue": "SqlServer",
+      "description": "The database provider to use"
+    },
+    "Mapper": {
+      "type": "parameter",
+      "datatype": "choice",
+      "choices": [
+        {
+          "choice": "AutoMapper",
+          "description": "AutoMapper with profile-based configuration"
+        },
+        {
+          "choice": "Mapster",
+          "description": "Mapster lightweight code-first mapper"
+        }
+      ],
+      "defaultValue": "AutoMapper",
+      "description": "The object mapping library to use"
+    },
+    "Authentication": {
+      "type": "parameter",
+      "datatype": "choice",
+      "choices": [
+        {
+          "choice": "JWT",
+          "description": "JWT token-based authentication"
+        },
+        {
+          "choice": "OAuth2",
+          "description": "OAuth2/OpenID Connect authentication"
+        }
+      ],
+      "defaultValue": "JWT",
+      "description": "The authentication mechanism to use"
+    },
+    "Logging": {
+      "type": "parameter",
+      "datatype": "choice",
+      "choices": [
+        {
+          "choice": "Serilog",
+          "description": "Serilog structured logging"
+        },
+        {
+          "choice": "Default",
+          "description": "Built-in .NET logging"
+        }
+      ],
+      "defaultValue": "Serilog",
+      "description": "The logging framework to use"
+    },
+    "Caching": {
+      "type": "parameter",
+      "datatype": "choice",
+      "choices": [
+        {
+          "choice": "HybridCache",
+          "description": ".NET 9 HybridCache (Redis + Memory)"
+        },
+        {
+          "choice": "Redis",
+          "description": "Redis distributed cache"
+        },
+        {
+          "choice": "InMemory",
+          "description": "In-memory caching"
+        },
+        {
+          "choice": "None",
+          "description": "No caching"
+        }
+      ],
+      "defaultValue": "None",
+      "description": "The caching strategy to use"
+    },
+    "TestingFramework": {
+      "type": "parameter",
+      "datatype": "choice",
+      "choices": [
+        {
+          "choice": "xUnit",
+          "description": "xUnit testing framework"
+        },
+        {
+          "choice": "NUnit",
+          "description": "NUnit testing framework"
+        }
+      ],
+      "defaultValue": "xUnit",
+      "description": "The testing framework to use"
+    },
+    "UseSwagger": {
+      "type": "parameter",
+      "datatype": "bool",
+      "defaultValue": "true",
+      "description": "Include Swagger/OpenAPI documentation"
+    },
+    "UseHealthChecks": {
+      "type": "parameter",
+      "datatype": "bool",
+      "defaultValue": "true",
+      "description": "Include health check endpoints"
+    },
+    "UseMinimalApis": {
+      "type": "parameter",
+      "datatype": "bool",
+      "defaultValue": "false",
+      "description": "Use Minimal APIs instead of Controllers"
+    },
+    "IncludeDocker": {
+      "type": "parameter",
+      "datatype": "bool",
+      "defaultValue": "true",
+      "description": "Include Dockerfile and docker-compose"
+    },
+    "IncludeGitHubActions": {
+      "type": "parameter",
+      "datatype": "bool",
+      "defaultValue": "true",
+      "description": "Include GitHub Actions CI/CD workflow"
+    },
+    "UseEFCore": {
+      "type": "computed",
+      "value": "(DataAccess == \"EFCore\")"
+    },
+    "UseDapper": {
+      "type": "computed",
+      "value": "(DataAccess == \"Dapper\")"
+    },
+    "UseAutoMapper": {
+      "type": "computed",
+      "value": "(Mapper == \"AutoMapper\")"
+    },
+    "UseMapster": {
+      "type": "computed",
+      "value": "(Mapper == \"Mapster\")"
+    },
+    "UseJWT": {
+      "type": "computed",
+      "value": "(Authentication == \"JWT\")"
+    },
+    "UseOAuth2": {
+      "type": "computed",
+      "value": "(Authentication == \"OAuth2\")"
+    },
+    "UseSerilog": {
+      "type": "computed",
+      "value": "(Logging == \"Serilog\")"
+    },
+    "UseHybridCache": {
+      "type": "computed",
+      "value": "(Caching == \"HybridCache\")"
+    },
+    "UseRedis": {
+      "type": "computed",
+      "value": "(Caching == \"Redis\" || Caching == \"HybridCache\")"
+    },
+    "UseInMemoryCache": {
+      "type": "computed",
+      "value": "(Caching == \"InMemory\")"
+    },
+    "UseXUnit": {
+      "type": "computed",
+      "value": "(TestingFramework == \"xUnit\")"
+    },
+    "UseNUnit": {
+      "type": "computed",
+      "value": "(TestingFramework == \"NUnit\")"
+    },
+    "IsCleanArchitecture": {
+      "type": "computed",
+      "value": "(Architecture == \"Clean\")"
+    },
+    "IsLayeredArchitecture": {
+      "type": "computed",
+      "value": "(Architecture == \"Layered\")"
+    },
+    "IsVerticalSlice": {
+      "type": "computed",
+      "value": "(Architecture == \"VerticalSlice\")"
+    }
+  },
+  "sources": [
+    {
+      "modifiers": [
+        {
+          "exclude": [
+            "pack-template.ps1",
+            "install-template.ps1",
+            "test-template.ps1",
+            "MyCompany.CleanArchitecture.Template.nuspec",
+            "README.md",
+            "QUICKSTART.md"
+          ]
+        },
+        {
+          "exclude": [
+            "Dockerfile",
+            "docker-compose.yml"
+          ]
+        },
+        {
+          "condition": "(Architecture != 'Clean')",
+          "exclude": [
+            "src/Clean/**"
+          ]
+        },
+        {
+          "condition": "(Architecture != 'Layered')",
+          "exclude": [
+            "src/Layered/**"
+          ]
+        },
+        {
+          "condition": "(Architecture != 'VerticalSlice')",
+          "exclude": [
+            "src/VerticalSlice/**"
+          ]
+        },
+        {
+          "condition": "(!IncludeDocker)",
+          "exclude": [
+            "Dockerfile",
+            "docker-compose.yml",
+            ".dockerignore",
+            "src/**/Dockerfile",
+            "src/**/docker-compose.yml"
+          ]
+        },
+        {
+          "condition": "(!IncludeGitHubActions)",
+          "exclude": [
+            ".github/**"
+          ]
+        },
+        {
+          "exclude": [
+            "src/VerticalSlice/Infrastructure/Mappings/MappingProfile.cs"
+          ]
+        },
+        {
+          "condition": "(DataAccess != 'Dapper')",
+          "exclude": [
+            "src/Layered/Data/Repositories/WeatherRepositoryDapper.cs"
+          ]
+        },
+        {
+          "condition": "(DataAccess != 'EFCore')",
+          "exclude": [
+            "src/Layered/Data/Context/AppDbContext.cs",
+            "src/Layered/Data/Repositories/WeatherRepository.cs"
+          ]
+        }
+      ]
+    }
+  ],
+  "postActions": [
+    {
+      "condition": "(!skipRestore)",
+      "description": "Restore NuGet packages",
+      "manualInstructions": [
+        {
+          "text": "Run 'dotnet restore'"
+        }
+      ],
+      "actionId": "210D431B-A78B-4D2F-B762-4ED3E3EA9025",
+      "continueOnError": true
+    }
+  ]
+}

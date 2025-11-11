@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="6.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="FluentAssertions" Version="6.12.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.0" />
+    <PackageReference Include="Moq" Version="4.20.70" />
+    <PackageReference Include="xunit" Version="2.9.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+     <!--#if (IsCleanArchitecture) -->
+     <ProjectReference Include="..\..\src\Clean\Application\MyService.Application.csproj" />
+     <ProjectReference Include="..\..\src\Clean\Domain\MyService.Domain.csproj" />
+     <!--#endif -->
+     <!--#if (IsLayeredArchitecture) -->
+     <ProjectReference Include="..\..\src\Layered\Business\MyService.Business.csproj" />
+     <ProjectReference Include="..\..\src\Layered\Domain\MyService.Domain.csproj" />
+     <!--#endif -->
+     <!--#if (IsVerticalSlice) -->
+     <ProjectReference Include="..\..\src\VerticalSlice\Features\MyService.Features.csproj" />
+     <ProjectReference Include="..\..\src\VerticalSlice\Domain\MyService.Domain.csproj" />
+     <!--#endif -->
+     <ProjectReference Include="..\Fixtures\MyService.Fixtures.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,310 @@
+name: .NET 9 Web API - CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+env:
+  DOTNET_VERSION: '9.0.x'
+  SOLUTION_PATH: './src'
+  DOCKER_IMAGE_NAME: 'dotnet-webapi'
+  DOCKER_REGISTRY: 'ghcr.io'
+
+jobs:
+  # =====================================================
+  # Job 1: Build & Unit Tests
+  # =====================================================
+  build-and-test:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout Code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Full history for better analysis
+    
+    - name: 🔧 Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+    
+    - name: 📦 Restore Dependencies
+      run: dotnet restore
+      working-directory: ${{ env.SOLUTION_PATH }}
+    
+    - name: 🏗️ Build Solution
+      run: dotnet build --configuration Release --no-restore
+      working-directory: ${{ env.SOLUTION_PATH }}
+    
+    - name: 🧪 Run Unit Tests
+      run: |
+        dotnet test tests/UnitTests/*.csproj \
+          --configuration Release \
+          --no-build \
+          --verbosity normal \
+          --logger trx \
+          --collect:"XPlat Code Coverage" \
+          --results-directory ./TestResults
+      working-directory: ${{ env.SOLUTION_PATH }}
+    
+    - name: 📊 Generate Code Coverage Report
+      uses: danielpalme/ReportGenerator-GitHub-Action@5.2.0
+      with:
+        reports: '${{ env.SOLUTION_PATH }}/TestResults/**/coverage.cobertura.xml'
+        targetdir: '${{ env.SOLUTION_PATH }}/CoverageReport'
+        reporttypes: 'HtmlInline;Cobertura;MarkdownSummaryGithub'
+    
+    - name: 📈 Upload Coverage to Codecov (Optional)
+      if: github.event_name == 'push'
+      uses: codecov/codecov-action@v4
+      with:
+        files: '${{ env.SOLUTION_PATH }}/TestResults/**/coverage.cobertura.xml'
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
+    
+    - name: 📤 Upload Test Results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results
+        path: '${{ env.SOLUTION_PATH }}/TestResults/**/*.trx'
+    
+    - name: 📤 Upload Coverage Report
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report
+        path: '${{ env.SOLUTION_PATH }}/CoverageReport'
+
+  # =====================================================
+  # Job 2: Integration Tests (with TestContainers)
+  # =====================================================
+  integration-tests:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    
+    steps:
+    - name: 📥 Checkout Code
+      uses: actions/checkout@v4
+    
+    - name: 🔧 Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+    
+    - name: 🐳 Setup Docker (for TestContainers)
+      uses: docker/setup-buildx-action@v3
+    
+    - name: 📦 Restore Dependencies
+      run: dotnet restore
+      working-directory: ${{ env.SOLUTION_PATH }}
+    
+    - name: 🏗️ Build Solution
+      run: dotnet build --configuration Release --no-restore
+      working-directory: ${{ env.SOLUTION_PATH }}
+    
+    - name: 🧪 Run Integration Tests
+      run: |
+        dotnet test tests/IntegrationTests/*.csproj \
+          --configuration Release \
+          --no-build \
+          --verbosity normal \
+          --logger trx \
+          --results-directory ./IntegrationTestResults
+      working-directory: ${{ env.SOLUTION_PATH }}
+      env:
+        # TestContainers environment variables
+        DOCKER_HOST: unix:///var/run/docker.sock
+        TESTCONTAINERS_RYUK_DISABLED: false
+    
+    - name: 📤 Upload Integration Test Results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: integration-test-results
+        path: '${{ env.SOLUTION_PATH }}/IntegrationTestResults/**/*.trx'
+
+  # =====================================================
+  # Job 3: Code Quality & Security Scan
+  # =====================================================
+  code-quality:
+    name: Code Quality & Security
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    
+    steps:
+    - name: 📥 Checkout Code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: 🔧 Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+    
+    - name: 🔍 Run CodeQL Analysis
+      uses: github/codeql-action/init@v3
+      with:
+        languages: csharp
+    
+    - name: 🏗️ Build for Analysis
+      run: dotnet build --configuration Release
+      working-directory: ${{ env.SOLUTION_PATH }}
+    
+    - name: 🔍 Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v3
+    
+    - name: 🛡️ Run Dependency Check
+      run: |
+        dotnet list package --vulnerable --include-transitive 2>&1 | tee vulnerable-packages.txt
+        if grep -q "has the following vulnerable packages" vulnerable-packages.txt; then
+          echo "⚠️ Vulnerable packages found!"
+          exit 1
+        fi
+      working-directory: ${{ env.SOLUTION_PATH }}
+
+  # =====================================================
+  # Job 4: Build & Push Docker Image
+  # =====================================================
+  docker-build-push:
+    name: Build & Push Docker Image
+    runs-on: ubuntu-latest
+    needs: [build-and-test, integration-tests]
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
+    
+    permissions:
+      contents: read
+      packages: write
+    
+    steps:
+    - name: 📥 Checkout Code
+      uses: actions/checkout@v4
+    
+    - name: 🔐 Log in to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ${{ env.DOCKER_REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: 🏷️ Extract Metadata
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: ${{ env.DOCKER_REGISTRY }}/${{ github.repository_owner }}/${{ env.DOCKER_IMAGE_NAME }}
+        tags: |
+          type=ref,event=branch
+          type=sha,prefix={{branch}}-
+          type=semver,pattern={{version}}
+          type=semver,pattern={{major}}.{{minor}}
+          type=raw,value=latest,enable={{is_default_branch}}
+    
+    - name: 🔧 Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    
+    - name: 🐳 Build and Push Docker Image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: ./Dockerfile
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        build-args: |
+          BUILDTIME=${{ github.event.head_commit.timestamp }}
+          VERSION=${{ steps.meta.outputs.version }}
+          REVISION=${{ github.sha }}
+
+  # =====================================================
+  # Job 5: Deploy to Development (Optional)
+  # =====================================================
+  deploy-dev:
+    name: Deploy to Development
+    runs-on: ubuntu-latest
+    needs: docker-build-push
+    if: github.ref == 'refs/heads/develop'
+    environment:
+      name: development
+      url: https://dev-api.yourdomain.com
+    
+    steps:
+    - name: 🚀 Deploy to Development Environment
+      run: |
+        echo "Deploying to development environment..."
+        # Add your deployment script here
+        # Examples:
+        # - kubectl apply -f k8s/dev/
+        # - az webapp deploy
+        # - helm upgrade --install
+        echo "✅ Deployment completed"
+
+  # =====================================================
+  # Job 6: Deploy to Production (Optional)
+  # =====================================================
+  deploy-prod:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: docker-build-push
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: production
+      url: https://api.yourdomain.com
+    
+    steps:
+    - name: 🚀 Deploy to Production Environment
+      run: |
+        echo "Deploying to production environment..."
+        # Add your deployment script here
+        echo "✅ Deployment completed"
+    
+    - name: 📣 Create Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ github.run_number }}
+        release_name: Release v${{ github.run_number }}
+        body: |
+          ## 🚀 Release v${{ github.run_number }}
+          
+          **Commit:** ${{ github.sha }}
+          **Branch:** ${{ github.ref }}
+          **Author:** ${{ github.actor }}
+          
+          ### Changes
+          ${{ github.event.head_commit.message }}
+        draft: false
+        prerelease: false
+
+# =====================================================
+# Summary Job (Always Run)
+# =====================================================
+  pipeline-summary:
+    name: Pipeline Summary
+    runs-on: ubuntu-latest
+    needs: [build-and-test, integration-tests, code-quality]
+    if: always()
+    
+    steps:
+    - name: 📊 Pipeline Status
+      run: |
+        echo "## 📊 CI/CD Pipeline Summary" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "| Job | Status |" >> $GITHUB_STEP_SUMMARY
+        echo "|-----|--------|" >> $GITHUB_STEP_SUMMARY
+        echo "| Build & Test | ${{ needs.build-and-test.result }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| Integration Tests | ${{ needs.integration-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| Code Quality | ${{ needs.code-quality.result }} |" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**Commit:** \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+        echo "**Branch:** \`${{ github.ref }}\`" >> $GITHUB_STEP_SUMMARY
+        echo "**Triggered by:** ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY

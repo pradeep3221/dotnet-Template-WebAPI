@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>MyService.Infrastructure</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+  <ProjectReference Include="..\Domain\MyService.Domain.csproj" />
+  <ProjectReference Include="..\Shared\MyService.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+<!--#if (UseEFCore) -->
+  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
+  <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
+    <PrivateAssets>all</PrivateAssets>
+    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+  </PackageReference>
+<!--#endif -->
+<!--#if (DatabaseProvider == "SqlServer") -->
+  <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0" />
+<!--#endif -->
+<!--#if (DatabaseProvider == "PostgreSQL") -->
+  <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.0" />
+<!--#endif -->
+<!--#if (DatabaseProvider == "MySQL") -->
+  <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
+<!--#endif -->
+<!--#if (DatabaseProvider == "SQLite") -->
+  <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.0" />
+<!--#endif -->
+<!--#if (UseAutoMapper) -->
+  <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+<!--#endif -->
+<!--#if (UseMapster) -->
+  <PackageReference Include="Mapster.DependencyInjection" Version="1.0.1" />
+<!--#endif -->
+  </ItemGroup>
+
+</Project>

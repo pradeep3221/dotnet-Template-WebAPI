@@ -1,0 +1,22 @@
+{
+  "weatherForecasts": [
+    {
+      "id": 1,
+      "date": "2025-01-15T00:00:00Z",
+      "temperatureC": 25,
+      "summary": "Sunny"
+    },
+    {
+      "id": 2,
+      "date": "2025-01-16T00:00:00Z",
+      "temperatureC": 18,
+      "summary": "Mild"
+    },
+    {
+      "id": 3,
+      "date": "2025-01-17T00:00:00Z",
+      "temperatureC": 10,
+      "summary": "Cool"
+    }
+  ]
+}

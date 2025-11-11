@@ -1,0 +1,43 @@
+#if (UseNUnit)
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="6.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="FluentAssertions" Version="6.12.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.0" />
+    <PackageReference Include="Moq" Version="4.20.70" />
+    <PackageReference Include="NUnit" Version="4.2.2" />
+    <PackageReference Include="NUnit.Analyzers" Version="4.3.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="NUnit3TestAdapter" Version="4.6.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+#if (IsCleanArchitecture)
+    <ProjectReference Include="..\..\src\Application\MyService.Application.csproj" />
+#endif
+#if (IsLayeredArchitecture)
+    <ProjectReference Include="..\..\src\Business\MyService.Business.csproj" />
+#endif
+#if (IsVerticalSlice)
+    <ProjectReference Include="..\..\src\Features\MyService.Features.csproj" />
+#endif
+    <ProjectReference Include="..\..\src\Domain\MyService.Domain.csproj" />
+    <ProjectReference Include="..\Fixtures\MyService.Fixtures.csproj" />
+  </ItemGroup>
+
+</Project>
+#endif

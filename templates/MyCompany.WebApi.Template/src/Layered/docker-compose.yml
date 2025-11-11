@@ -1,0 +1,25 @@
+version: '3.9'
+services:
+  api:
+    build:
+      context: ../../..
+      dockerfile: src/Layered/Dockerfile
+    image: layered-architecture-api:latest
+    container_name: layered-architecture-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=db;Database=AppDb;User Id=sa;Password=Your_password123;TrustServerCertificate=True
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: layered-architecture-db
+    environment:
+      SA_PASSWORD: "Your_password123"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "14334:1433"
+volumes:
+  layered_data: {}
