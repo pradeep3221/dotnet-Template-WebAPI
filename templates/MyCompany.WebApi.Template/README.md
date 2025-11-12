@@ -626,7 +626,16 @@ For issues and questions:
 
 ## Todo
 - New Virticle slice with CQRS with EF Core as write and Dapper as read and Event Sourcing with KurrentDB
-- Messaging with MassTransit 
+- Messaging with MassTransit with RabbitMQ, Auzure Service Bus, AWS SQS Kafka. 
 - Add simple 3 layer template - API, Business, Data
+- Worker Service Template with Clean Architecture, scaffold background processing services — queue consumers, schedulers, or data sync jobs. you can publish it as a .nupkg
+At template consume time, prompt for:
+   | Option                | Choices                              |
+| --------------------- | ------------------------------------ |
+| **Queue Type**        | RabbitMQ / Kafka / SQS / Azure Queue |
+| **Scheduler Type**    | Cron / Timed Loop                    |
+| **Logging Framework** | Serilog / NLog                       |
+| **ORM / Database**    | EF Core / Dapper / None              |
+
 
 **Made with ❤️ using .NET 9**

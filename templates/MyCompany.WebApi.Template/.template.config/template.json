@@ -10,7 +10,7 @@
     "type": "project"
   },
   "sourceName": "MyService",
-  "preferNameDirectory": true,
+  "preferNameDirectory": false, 
   "symbols": {
     "Architecture": {
       "type": "parameter",
