@@ -16,6 +16,7 @@ It's designed to serve as a **future-proof, reusable baseline** for enterprise-g
 - [Tutorial: Create a project template](https://learn.microsoft.com/en-us/dotnet/core/tutorials/cli-templates-create-project-template)
 - [dotnet/templating](https://github.com/dotnet/templating)
 - [ardalis/CleanArchitecture](https://github.com/ardalis/CleanArchitecture)
+- [Implement background tasks in microservices with IHostedService and the BackgroundService class](https://learn.microsoft.com/en-us/dotnet/architecture/microservices/multi-container-microservice-net-applications/background-tasks-with-ihostedservice)
 
 ---
 
