@@ -639,3 +639,225 @@ At template consume time, prompt for:
 
 
 **Made with ❤️ using .NET 9**
+
+
+
+# *Automatically generating code snippets from Endpoint to Persistence.
+
+## Recommended Workflow
+For New Features (Full CRUD):
+```
+1. Use AI Toolkit Agent → Generate complete feature
+2. Review & adjust generated code
+3. Run tests
+```
+
+For Single Operations:
+```
+1. Type snippet prefix (vs-command, vs-query)
+2. Fill in placeholders
+3. Add business logic
+```
+
+For Team Standards:
+```
+1. Create dotnet templates for common patterns
+2. Team uses: dotnet new vs-feature -n [Name]
+```
+
+## Differnet Approches 
+
+### 1. ***AI Toolkit Tools
+For agent-driven code generation, consider:
+
+- Use aitk-get_agent_code_gen_best_practices for guidance
+- Create an agent that understands your architecture
+- Generate entire features with proper error handling
+
+Best Approach: Hybrid Strategy - Why Best:
+- ✅ Understands your entire architecture context
+- ✅ Generates complete features (Endpoint → Handler → Validation → Repository → Tests)
+- ✅ Follows your conventions automatically
+- ✅ Handles complex scenarios with proper error handling
+- ✅ Can read existing code patterns and replicate them
+
+Usage:
+```
+Create a new Product management feature with:
+- CreateProduct command (POST /api/products)
+- GetProduct query (GET /api/products/{id})
+- UpdateProduct command (PUT /api/products/{id})
+- DeleteProduct command (DELETE /api/products/{id})
+- Include FluentValidation, error handling, and repository pattern
+```
+
+
+### 2. VS Code Snippets (Built-in) - Second best
+Create custom snippets in .vscode/snippets.code-snippets:
+```json
+{
+  "Vertical Slice Feature": {
+    "prefix": "vs-feature",
+    "body": [
+      "// Features/${1:FeatureName}/",
+      "public record ${1}Command : IRequest<Result<${1}Response>>;",
+      "",
+      "public class ${1}Handler : IRequestHandler<${1}Command, Result<${1}Response>>",
+      "{",
+      "    private readonly IRepository<${2:Entity}> _repository;",
+      "    ",
+      "    public ${1}Handler(IRepository<${2}> repository)",
+      "    {",
+      "        _repository = repository;",
+      "    }",
+      "    ",
+      "    public async Task<Result<${1}Response>> Handle(${1}Command request, CancellationToken ct)",
+      "    {",
+      "        $0",
+      "    }",
+      "}",
+      "",
+      "public record ${1}Response;"
+    ]
+  }
+}
+```
+For rapid scaffolding of individual components:
+
+```json
+// .vscode/vertical-slice.code-snippets
+{
+  "VS Command+Handler": {
+    "prefix": "vs-command",
+    "scope": "csharp",
+    "body": [
+      "namespace ${1:FeatureName};",
+      "",
+      "public record ${2:Create}${1}Command(",
+      "    ${3:string Name}",
+      ") : IRequest<Result<${1}Response>>;",
+      "",
+      "public class ${2}${1}Handler : IRequestHandler<${2}${1}Command, Result<${1}Response>>",
+      "{",
+      "    private readonly IApplicationDbContext _context;",
+      "    private readonly IMapper _mapper;",
+      "",
+      "    public ${2}${1}Handler(IApplicationDbContext context, IMapper mapper)",
+      "    {",
+      "        _context = context;",
+      "        _mapper = mapper;",
+      "    }",
+      "",
+      "    public async Task<Result<${1}Response>> Handle(${2}${1}Command request, CancellationToken ct)",
+      "    {",
+      "        ${0:// TODO: Implementation}",
+      "    }",
+      "}",
+      "",
+      "public record ${1}Response;",
+      "",
+      "public class ${2}${1}Validator : AbstractValidator<${2}${1}Command>",
+      "{",
+      "    public ${2}${1}Validator()",
+      "    {",
+      "        // TODO: Add validation rules",
+      "    }",
+      "}"
+    ]
+  },
+  "VS Query+Handler": {
+    "prefix": "vs-query",
+    "scope": "csharp",
+    "body": [
+      "namespace ${1:FeatureName};",
+      "",
+      "public record Get${1}Query(${2:int Id}) : IRequest<Result<${1}Response>>;",
+      "",
+      "public class Get${1}Handler : IRequestHandler<Get${1}Query, Result<${1}Response>>",
+      "{",
+      "    private readonly IApplicationDbContext _context;",
+      "    private readonly IMapper _mapper;",
+      "",
+      "    public Get${1}Handler(IApplicationDbContext context, IMapper mapper)",
+      "    {",
+      "        _context = context;",
+      "        _mapper = mapper;",
+      "    }",
+      "",
+      "    public async Task<Result<${1}Response>> Handle(Get${1}Query request, CancellationToken ct)",
+      "    {",
+      "        ${0:// TODO: Implementation}",
+      "    }",
+      "}",
+      "",
+      "public record ${1}Response;"
+    ]
+  },
+  "VS Minimal API Endpoint": {
+    "prefix": "vs-endpoint",
+    "scope": "csharp",
+    "body": [
+      "app.MapPost(\"/api/${1:resource}\", async (",
+      "    [FromBody] ${2:Create}${3:Entity}Command command,",
+      "    IMediator mediator,",
+      "    CancellationToken ct) =>",
+      "{",
+      "    var result = await mediator.Send(command, ct);",
+      "    return result.IsSuccess ",
+      "        ? Results.Created($\"/api/${1}/{result.Value.Id}\", result.Value)",
+      "        : Results.BadRequest(result.Error);",
+      "})",
+      ".WithName(\"${2}${3}\")",
+      ".WithTags(\"${3}\")",
+      ".Produces<${3}Response>(StatusCodes.Status201Created)",
+      ".ProducesProblem(StatusCodes.Status400BadRequest);",
+      "",
+      "${0}"
+    ]
+  }
+}
+```
+
+### 3. dotnet CLI Templates
+Create item templates:
+```
+dotnet new install MyCompany.VerticalSlice.Templates
+dotnet new vs-command -n CreateProduct
+```
+Create item templates for team consistency:
+```
+# Create template structure
+dotnet new install MyCompany.VerticalSlice.Templates
+
+# Generate feature
+dotnet new vs-feature -n Product -o src/VerticalSlice/Features/Products
+```
+
+---
+Avoid These:
+❌ Roslyn Source Generators - Overkill for Vertical Slice, compile-time complexity
+❌ T4 Templates - Legacy, hard to maintain
+❌ GitHub Copilot /new - Good but less architecture-aware than AI Toolkit agent
+---
+
+### 4. Roslyn Source Generators
+Create a compile-time generator:
+- Generate boilerplate for Commands/Queries
+- Auto-generate Endpoints from markers
+- Create Repository patterns
+
+###  5. T4 Templates / Scriban
+Runtime text templates for:
+- CRUD operations
+- Feature scaffolding
+- Entity-to-DTO mapping
+
+
+### 6. GitHub Copilot Chat Participants (Recommended)
+Use /new slash command with context:
+```
+/new feature for managing products with create, update, delete endpoints
+```
+
+
+
