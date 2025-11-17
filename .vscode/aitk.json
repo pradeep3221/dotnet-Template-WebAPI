@@ -1,0 +1,58 @@
+{
+  "agents": [
+    {
+      "name": "CleanArchitectureAgent",
+      "configPath": ".aitk/agents/clean-architecture-agent.json",
+      "enabled": true,
+      "description": "AI agent for Clean Architecture with DDD and CQRS",
+      "triggers": [
+        "clean architecture",
+        "generate clean feature",
+        "ddd entity",
+        "domain event"
+      ]
+    },
+    {
+      "name": "LayeredArchitectureAgent",
+      "configPath": ".aitk/agents/layered-architecture-agent.json",
+      "enabled": true,
+      "description": "AI agent for traditional Layered Architecture",
+      "triggers": [
+        "layered architecture",
+        "generate layered feature",
+        "service layer",
+        "repository pattern"
+      ]
+    },
+    {
+      "name": "VerticalSliceAgent",
+      "configPath": ".aitk/agents/vertical-slice-agent.json",
+      "enabled": true,
+      "description": "AI agent for Vertical Slice Architecture",
+      "triggers": [
+        "vertical slice",
+        "generate feature",
+        "minimal api",
+        "feature folder"
+      ]
+    }
+  ],
+  "mcp": {
+    "enabled": true,
+    "configPath": ".aitk/mcp/server-config.json",
+    "autoStart": true
+  },
+  "codeGeneration": {
+    "followBestPractices": true,
+    "useExistingPatterns": true,
+    "includeTests": true,
+    "includeValidation": true,
+    "autoFormat": true
+  },
+  "workspace": {
+    "framework": ".NET 9",
+    "architectures": ["Clean", "Layered", "VerticalSlice"],
+    "patterns": ["CQRS", "MediatR", "Repository", "DDD"],
+    "testFramework": "xUnit"
+  }
+}

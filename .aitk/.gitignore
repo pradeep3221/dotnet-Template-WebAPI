@@ -1,0 +1,27 @@
+# Node.js dependencies
+mcp/node_modules/
+mcp/package-lock.json
+
+# Logs
+mcp/*.log
+mcp/npm-debug.log*
+mcp/yarn-debug.log*
+mcp/yarn-error.log*
+
+# Runtime data
+mcp/pids
+mcp/*.pid
+mcp/*.seed
+mcp/*.pid.lock
+
+# Optional npm cache directory
+mcp/.npm
+
+# Optional eslint cache
+mcp/.eslintcache
+
+# Temporary files
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db

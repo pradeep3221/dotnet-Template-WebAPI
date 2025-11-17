@@ -654,7 +654,7 @@ For New Features (Full CRUD):
 
 For Single Operations:
 ```
-1. Type snippet prefix (vs-command, vs-query)
+1. Type snippet prefix (vsa-command, vs-query)
 2. Fill in placeholders
 3. Add business logic
 ```
@@ -728,7 +728,7 @@ For rapid scaffolding of individual components:
 // .vscode/vertical-slice.code-snippets
 {
   "VS Command+Handler": {
-    "prefix": "vs-command",
+    "prefix": "vsa-command",
     "scope": "csharp",
     "body": [
       "namespace ${1:FeatureName};",
@@ -822,7 +822,7 @@ For rapid scaffolding of individual components:
 Create item templates:
 ```
 dotnet new install MyCompany.VerticalSlice.Templates
-dotnet new vs-command -n CreateProduct
+dotnet new vsa-command -n CreateProduct
 ```
 Create item templates for team consistency:
 ```

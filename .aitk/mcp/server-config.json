@@ -1,0 +1,23 @@
+{
+  "mcpServers": {
+    "dotnet-architecture": {
+      "command": "node",
+      "args": [
+        "${workspaceFolder}/.aitk/mcp/servers/architecture-server.js"
+      ],
+      "env": {
+        "WORKSPACE_ROOT": "${workspaceFolder}",
+        "TEMPLATES_PATH": "${workspaceFolder}/templates/MyCompany.WebApi.Template"
+      }
+    },
+    "code-analysis": {
+      "command": "node",
+      "args": [
+        "${workspaceFolder}/.aitk/mcp/servers/code-analysis-server.js"
+      ],
+      "env": {
+        "PROJECT_PATH": "${workspaceFolder}/templates/MyCompany.WebApi.Template"
+      }
+    }
+  }
+}
