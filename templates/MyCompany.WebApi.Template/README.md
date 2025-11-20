@@ -834,10 +834,12 @@ dotnet new vs-feature -n Product -o src/VerticalSlice/Features/Products
 ```
 
 ---
+
 Avoid These:
 ❌ Roslyn Source Generators - Overkill for Vertical Slice, compile-time complexity
 ❌ T4 Templates - Legacy, hard to maintain
 ❌ GitHub Copilot /new - Good but less architecture-aware than AI Toolkit agent
+
 ---
 
 ### 4. Roslyn Source Generators
